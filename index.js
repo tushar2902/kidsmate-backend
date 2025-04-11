@@ -6,12 +6,22 @@ const apiRoutes = require('./routes');
 require('dotenv').config();
 
 // Enhanced CORS configuration
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://kidsmate.vercel.app',
+];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'https://kidsmate.vercel.app',
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 
 // Body parsing middleware
 app.use(express.json());
