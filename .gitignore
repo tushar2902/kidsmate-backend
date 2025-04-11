@@ -16,7 +16,6 @@ tmp
 .npm
 
 # API keys and secrets
-.env
 .eslintcache
 
 # Dependency directory
