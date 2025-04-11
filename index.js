@@ -5,14 +5,13 @@ const apiRoutes = require('./routes');
 
 require('dotenv').config();
 
-// Enhanced CORS configuration
 const allowedOrigins = [
   'http://localhost:3000',
   'https://kidsmate.vercel.app',
 ];
 
 app.use(cors({
-  origin: (origin, callback) => {
+  origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -20,7 +19,13 @@ app.use(cors({
     }
   },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
+// Make sure to respond to preflight requests:
+app.options('*', cors());
+
 
 
 // Body parsing middleware
