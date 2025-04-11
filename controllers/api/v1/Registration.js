@@ -7,16 +7,19 @@ const {
 } = require("../../../models/helpers/EmailHelper");
 const { createRegistration } = require("../../../models/repositories/registration");
 
-exports.registerUser = async (req, res) => {
+exports.registerUser = async (req, res, next) => {
   try {
     const { fullName, email, phone, ageGroup, courseName } = req.body;
     const paymentScreenshot = req.file;
 
     if (!paymentScreenshot) {
-      return res.status(400).json({ message: "Payment screenshot is required" });
+      return res.status(400).json({ 
+        success: false,
+        message: "Payment screenshot is required" 
+      });
     }
 
-    // Create registration in database
+    // Create registration
     const result = await createRegistration({
       fullName,
       email,
@@ -27,9 +30,12 @@ exports.registerUser = async (req, res) => {
     });
 
     if (!result.success) {
-      // Clean up uploaded file if registration fails
+      // Clean up uploaded file
       fs.unlinkSync(paymentScreenshot.path);
-      return res.status(409).json({ message: result.message });
+      return res.status(409).json({ 
+        success: false,
+        message: result.message 
+      });
     }
 
     // Send emails
@@ -46,13 +52,15 @@ exports.registerUser = async (req, res) => {
       await sendUserConfirmationMail({ fullName, email, courseName });
 
       return res.status(201).json({ 
+        success: true,
         message: "Registration successful",
         data: result.data 
       });
     } catch (emailError) {
       console.error("Email sending failed:", emailError);
-      // Registration succeeded but email failed - consider queueing for retry
+      // Registration succeeded but email failed
       return res.status(201).json({
+        success: true,
         message: "Registration completed but email notification failed",
         data: result.data
       });
@@ -61,6 +69,6 @@ exports.registerUser = async (req, res) => {
     console.error("Registration Error:", error);
     // Clean up file if error occurs
     if (req.file) fs.unlinkSync(req.file.path);
-    return res.status(500).json({ message: "Internal server error" });
+    next(error); // Pass to error handling middleware
   }
 };

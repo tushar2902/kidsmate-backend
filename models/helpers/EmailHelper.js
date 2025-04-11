@@ -22,7 +22,7 @@ exports.sendAdminMail = async (data) => {
   }
 
   return transporter.sendMail({
-    from: `"Kids Coding" <${process.env.MAIL_USER}>`,
+    from: `"Kidsmate" <${process.env.MAIL_USER}>`,
     to: process.env.ADMIN_EMAIL,
     subject: `New Registration: ${fullName}`,
     html: `
@@ -49,7 +49,7 @@ exports.sendAdminMail = async (data) => {
 
 exports.sendUserConfirmationMail = async ({ fullName, email, courseName }) => {
   return transporter.sendMail({
-    from: `"Kids Coding" <${process.env.MAIL_USER}>`,
+    from: `"Kidsmate" <${process.env.MAIL_USER}>`,
     to: email,
     subject: 'Your Registration is in Process',
     html: `
@@ -61,7 +61,7 @@ exports.sendUserConfirmationMail = async ({ fullName, email, courseName }) => {
           <p>We have received your registration and payment receipt.</p>
           <p>Our team will verify your payment and get back to you shortly.</p>
         </div>
-        <p style="margin-top: 16px;">- Kids Coding Team</p>
+        <p style="margin-top: 16px;">- Kidsmate Team</p>
       </div>
     `,
   });
