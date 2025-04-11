@@ -7,7 +7,7 @@ require('dotenv').config();
 
 // Enhanced CORS configuration
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'https://kidsmate.vercel.app/',
+  origin: process.env.FRONTEND_URL || 'https://kidsmate.vercel.app',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
